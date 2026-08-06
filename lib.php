@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Callback before HTML head output to inject tag assistant on question editing pages.
  */
@@ -35,9 +33,10 @@ function qbank_tagassistant_before_standard_html_head(): void {
     }
 
     $pagepath = $PAGE->url->get_path();
-    if (strpos($pagepath, 'question/bank/editquestion/question.php') !== false ||
-        strpos($pagepath, 'question/question.php') !== false) {
+    $isquestionedit = strpos($pagepath, 'question/bank/editquestion/question.php') !== false;
+    $islegacyedit = strpos($pagepath, 'question/question.php') !== false;
 
+    if ($isquestionedit || $islegacyedit) {
         $context = $PAGE->context;
         if (!$context) {
             return;

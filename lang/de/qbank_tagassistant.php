@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['addtagaria'] = 'Schlagwort {$a->name} hinzufügen ({$a->count} Fragen)';
+$string['moretags'] = '+ {$a} weitere';
+$string['notagsincontext'] = 'Noch keine etablierten Schlagwörter in dieser Fragensammlung.';
 $string['pluginname'] = 'Fragensammlungs Tag-Assistent';
 $string['privacy:metadata'] = 'Der Fragensammlungs Tag-Assistent speichert keine personenbezogenen Daten.';
 $string['topquestionbanktags'] = 'Häufige Schlagwörter in dieser Fragensammlung:';
-$string['addtagaria'] = 'Schlagwort {$a->name} hinzufügen ({$a->count} Fragen)';
-$string['notagsincontext'] = 'Noch keine etablierten Schlagwörter in dieser Fragensammlung.';
-$string['moretags'] = '+ {$a} weitere';

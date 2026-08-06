@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['addtagaria'] = 'Add tag {$a->name}, used in {$a->count} questions';
+$string['moretags'] = '+ {$a} more';
+$string['notagsincontext'] = 'No established tags in this Question Bank yet.';
 $string['pluginname'] = 'Question Bank Tag Assistant';
 $string['privacy:metadata'] = 'The Question Bank Tag Assistant plugin does not store any personal data.';
 $string['topquestionbanktags'] = 'Frequent tags in this Question Bank:';
-$string['addtagaria'] = 'Add tag {$a->name}, used in {$a->count} questions';
-$string['notagsincontext'] = 'No established tags in this Question Bank yet.';
-$string['moretags'] = '+ {$a} more';

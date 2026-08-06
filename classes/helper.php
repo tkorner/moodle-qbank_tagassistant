@@ -26,7 +26,6 @@ use cache;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
-
     /**
      * Get the most frequently used question tags for a specific Question Bank context.
      *
