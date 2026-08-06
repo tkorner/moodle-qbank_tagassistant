@@ -29,7 +29,6 @@ use context_course;
  * @covers     \qbank_tagassistant\helper
  */
 final class helper_test extends advanced_testcase {
-
     /**
      * Test get_context_top_tags returns tags in the specified context.
      */
