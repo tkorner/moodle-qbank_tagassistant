@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Background Circle in Moodle Brand Blue -->
+  <circle cx="64" cy="64" r="60" fill="#0f6cbf"/>
+  
+  <!-- Tag Icon Outline -->
+  <path d="M40 36 H76 L96 56 L60 92 L40 72 Z" fill="#ffffff" opacity="0.95"/>
+  
+  <!-- Tag Hole -->
+  <circle cx="52" cy="48" r="6" fill="#0f6cbf"/>
+  
+  <!-- Assistant Sparkle / Star Badge -->
+  <path d="M90 28 L93 36 L101 39 L93 42 L90 50 L87 42 L79 39 L87 36 Z" fill="#ffc107"/>
+</svg>

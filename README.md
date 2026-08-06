@@ -1,11 +1,12 @@
 # Moodle Question Bank Tag Assistant (`qbank_tagassistant`)
 
+[![Moodle Plugin CI](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml)
 [![Moodle Version](https://img.shields.io/badge/Moodle-4.5%20%7C%205.0%2B-orange.svg)](https://moodle.org)
-[![Version](https://img.shields.io/badge/version-v0.1--beta-blue.svg)](https://github.com)
+[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Moodle Plugin Type](https://img.shields.io/badge/Plugin%20Type-qbank-green.svg)](https://docs.moodle.org/dev/Question_bank_plugins)
 
-**`qbank_tagassistant`** is a Moodle Question Bank plugin (`question/bank/tagassistant`) designed to assist teachers and question authors in maintaining a consistent tag taxonomy across subject departments.
+**`qbank_tagassistant`** is an open-source Moodle Question Bank plugin (`question/bank/tagassistant`) designed to assist teachers and question authors in maintaining a consistent tag taxonomy across subject departments during question editing.
 
 ---
 
@@ -34,7 +35,7 @@
 
 1. Copy or clone this repository to your Moodle installation under `question/bank/tagassistant`:
    ```bash
-   git clone https://github.com/your-username/moodle-qbank_tagassistant.git question/bank/tagassistant
+   git clone https://github.com/tkorner/moodle-qbank_tagassistant.git question/bank/tagassistant
    ```
 2. Run Moodle CLI upgrade:
    ```bash
@@ -69,7 +70,13 @@ Empirically measured inside Moodle 5.2 execution environment:
 
 ---
 
+## 🔒 Privacy & GDPR Compliance
+
+Implements the Moodle Privacy API (`\core_privacy\local\metadata\null_provider`). It does not store or process personal data independently outside of Moodle core tag structures.
+
+---
+
 ## 📜 License
 
-Licensed under the [GNU General Public License v3.0 or later](http://www.gnu.org/licenses/gpl.html).
-Copyright (C) 2026 Antigravity.
+Licensed under the [GNU General Public License v3.0 or later](http://www.gnu.org/licenses/gpl.html).  
+Copyright (C) 2026 Antigravity & Contributors.

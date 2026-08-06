@@ -1,0 +1,17 @@
+{
+    "name": "moodle-qbank/tagassistant",
+    "description": "Moodle Question Bank Tag Assistant plugin providing inline tag suggestions and taxonomy alignment during question editing.",
+    "type": "moodle-qbank",
+    "keywords": ["moodle", "qbank", "questionbank", "tags", "tagassistant", "taxonomy"],
+    "homepage": "https://github.com/tkorner/moodle-qbank_tagassistant",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "TKorner & Antigravity Team",
+            "homepage": "https://github.com/tkorner"
+        }
+    ],
+    "require": {
+        "php": ">=8.1.0"
+    }
+}

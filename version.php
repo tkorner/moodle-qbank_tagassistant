@@ -27,5 +27,5 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2026080600;
 $plugin->requires  = 2024100700; // Requires Moodle 4.5+ or Moodle 5.0+.
 $plugin->component = 'qbank_tagassistant';
-$plugin->maturity  = MATURITY_BETA;
-$plugin->release   = 'v0.1-beta';
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = 'v1.0.0';
