@@ -1,0 +1,10 @@
+/* Styles for qbank_tagassistant */
+
+.qbank-tag-chips-container {
+    width: 100%;
+    clear: both;
+}
+
+.qbank-tag-chip {
+    font-size: 1rem;
+}
