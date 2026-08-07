@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for qbank_tagassistant.
+ * Hook callbacks for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
  * @copyright  2026 Antigravity
@@ -24,8 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026080700;
-$plugin->requires  = 2024100700; // Requires Moodle 4.5+ or Moodle 5.0+.
-$plugin->component = 'qbank_tagassistant';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = 'v1.0.1';
+$callbacks = [
+    [
+        'hook' => \core\hook\output\before_standard_html_head::class,
+        'callback' => [\qbank_tagassistant\hook\before_standard_html_head::class, 'callback'],
+    ],
+];

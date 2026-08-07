@@ -2,7 +2,7 @@
 
 [![Moodle Plugin CI](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml)
 [![Moodle Version](https://img.shields.io/badge/Moodle-4.5%20%7C%205.0%2B-orange.svg)](https://moodle.org)
-[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
+[![Version](https://img.shields.io/badge/version-v1.0.1-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Moodle Plugin Type](https://img.shields.io/badge/Plugin%20Type-qbank-green.svg)](https://docs.moodle.org/dev/Question_bank_plugins)
 
@@ -18,7 +18,7 @@
 - **1-Click Selection**: Clicking a tag chip instantly populates Moodle's native `form-autocomplete` widget.
 - **Option 3 Smart Expand (`+ X weitere`)**: Displays top 5 tags initially and shows a `+ X weitere` expansion button ONLY if more than 5 tags exist in the Question Bank.
 - **High Performance & Caching**: Database queries are cached per Question Bank context using the Moodle Universal Cache (MUC). Empirical benchmark: **0.0095 ms** per page load.
-- **100% Core Compliant**: Built strictly as a standard `qbank` plugin with zero Moodle core modifications.
+- **PSR-14 Hooks API & 100% Core Compliant**: Built strictly with Moodle 4.4+ PSR-14 Hooks API (`db/hooks.php`) for 100% zero-config external installation compatibility with zero Moodle core modifications.
 
 ---
 

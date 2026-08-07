@@ -26,33 +26,8 @@
  * Callback before HTML head output to inject tag assistant on question editing pages.
  */
 function qbank_tagassistant_before_standard_html_head(): void {
-    global $PAGE;
-
-    if (!$PAGE || !$PAGE->url) {
-        return;
-    }
-
-    $pagepath = $PAGE->url->get_path();
-    $isquestionedit = strpos($pagepath, 'question/bank/editquestion/question.php') !== false;
-    $islegacyedit = strpos($pagepath, 'question/question.php') !== false;
-
-    if ($isquestionedit || $islegacyedit) {
-        $context = $PAGE->context;
-        if (!$context) {
-            return;
-        }
-
-        $toptags = \qbank_tagassistant\helper::get_context_top_tags($context->id, 15);
-        if (empty($toptags)) {
-            return;
-        }
-
-        $headingtext = get_string('topquestionbanktags', 'qbank_tagassistant');
-
-        $PAGE->requires->js_call_amd('qbank_tagassistant/tag_chips', 'init', [[
-            'tags' => $toptags,
-            'targetSelector' => 'select#id_tags, select[name="tags[]"]',
-            'headingText' => $headingtext,
-        ]]);
+    if (class_exists('\qbank_tagassistant\hook\before_standard_html_head') &&
+        class_exists('\core\hook\output\before_standard_html_head')) {
+        \qbank_tagassistant\hook\before_standard_html_head::callback(new \core\hook\output\before_standard_html_head());
     }
 }
