@@ -32,9 +32,9 @@ class before_standard_html_head {
     /**
      * Callback for before_standard_html_head hook.
      *
-     * @param head_hook $hook The hook instance.
+     * @param object|null $hook The hook instance.
      */
-    public static function callback(head_hook $hook): void {
+    public static function callback(?object $hook = null): void {
         global $PAGE;
 
         if (self::$rendered || !$PAGE) {

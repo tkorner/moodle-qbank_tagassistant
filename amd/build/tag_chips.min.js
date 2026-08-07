@@ -1,4 +1,4 @@
-define(['core/str'], function(Str) {
+define(['core/str', 'jquery'], function(Str, $) {
     'use strict';
 
     /**
@@ -146,6 +146,12 @@ define(['core/str'], function(Str) {
             targetSelect.addEventListener('change', function() {
                 this.syncStates(targetSelect, container);
             }.bind(this));
+
+            if ($) {
+                $(targetSelect).on('change', function() {
+                    this.syncStates(targetSelect, container);
+                }.bind(this));
+            }
         },
 
         /**
@@ -217,8 +223,8 @@ define(['core/str'], function(Str) {
                         }
 
                         select.dispatchEvent(new Event('change', { bubbles: true }));
-                        if (window.jQuery) {
-                            window.jQuery(select).trigger('change');
+                        if ($) {
+                            $(select).trigger('change');
                         }
                     });
 
@@ -227,8 +233,8 @@ define(['core/str'], function(Str) {
             }
 
             select.dispatchEvent(new Event('change', { bubbles: true }));
-            if (window.jQuery) {
-                window.jQuery(select).trigger('change');
+            if ($) {
+                $(select).trigger('change');
             }
 
             btn.disabled = true;
