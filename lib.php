@@ -26,8 +26,10 @@
  * Callback before HTML head output to inject tag assistant on question editing pages.
  */
 function qbank_tagassistant_before_standard_html_head(): void {
-    if (class_exists('\qbank_tagassistant\hook\before_standard_html_head') &&
-        class_exists('\core\hook\output\before_standard_html_head')) {
+    $haspluginhook = class_exists('\qbank_tagassistant\hook\before_standard_html_head');
+    $hascorehook = class_exists('\core\hook\output\before_standard_html_head');
+
+    if ($haspluginhook && $hascorehook) {
         \qbank_tagassistant\hook\before_standard_html_head::callback(new \core\hook\output\before_standard_html_head());
     }
 }

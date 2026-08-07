@@ -55,8 +55,9 @@ class before_standard_html_head {
             return;
         }
 
-        if (!has_capability('moodle/question:editall', $context) &&
-            !has_capability('moodle/question:editmine', $context)) {
+        $caneditall = has_capability('moodle/question:editall', $context);
+        $caneditmine = has_capability('moodle/question:editmine', $context);
+        if (!$caneditall && !$caneditmine) {
             return;
         }
 
