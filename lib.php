@@ -23,3 +23,13 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Legacy callback fallback for before_standard_html_head.
+ */
+function qbank_tagassistant_before_standard_html_head(): void {
+    if (class_exists('\qbank_tagassistant\hook\before_standard_html_head') &&
+        class_exists('\core\hook\output\before_standard_html_head')) {
+        \qbank_tagassistant\hook\before_standard_html_head::callback(new \core\hook\output\before_standard_html_head());
+    }
+}
