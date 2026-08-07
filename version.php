@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for qbank_tagassistant.
+ * Version details for qbank_tagassistant (Moodle 5.1+ exclusive).
  *
  * @package    qbank_tagassistant
  * @copyright  2026 Antigravity
@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026080700;
-$plugin->requires  = 2024100700; // Requires Moodle 4.5+ or Moodle 5.0+.
+$plugin->version   = 2026080701;
+$plugin->requires  = 2025100600; // Requires Moodle 5.1+ exclusively.
 $plugin->component = 'qbank_tagassistant';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = 'v1.0.1';
+$plugin->release   = 'v2.0.0';

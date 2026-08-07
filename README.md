@@ -1,32 +1,30 @@
 # Moodle Question Bank Tag Assistant (`qbank_tagassistant`)
 
 [![Moodle Plugin CI](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml)
-[![Moodle Version](https://img.shields.io/badge/Moodle-4.5%20%7C%205.0%2B-orange.svg)](https://moodle.org)
-[![Version](https://img.shields.io/badge/version-v1.0.1-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
+[![Moodle Version](https://img.shields.io/badge/Moodle-5.1%2B-orange.svg)](https://moodle.org)
+[![Version](https://img.shields.io/badge/version-v2.0.0-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Moodle Plugin Type](https://img.shields.io/badge/Plugin%20Type-qbank-green.svg)](https://docs.moodle.org/dev/Question_bank_plugins)
 
-**`qbank_tagassistant`** is an open-source Moodle Question Bank plugin (`question/bank/tagassistant`) designed to assist teachers and question authors in maintaining a consistent tag taxonomy across subject departments during question editing.
+**`qbank_tagassistant`** is an open-source Moodle Question Bank plugin (`question/bank/tagassistant`) designed for **Moodle 5.1+** to assist teachers and question authors in maintaining a consistent tag taxonomy across subject departments during question editing.
 
 ---
 
 ## 🌟 Key Features & User Benefits
 
-- **In-Context Tag Assistance**: Displays top established tags from the current **Question Bank Context** as clickable Bootstrap 5 pills/chips directly beneath the tag input field during question creation and editing.
-- **Zero-Guesswork Tagging**: Eliminates the "Cold Start" problem where teachers don't know what tags already exist in their department or course.
+- **Moodle 5.1+ Modal & SPA Native**: Built specifically for Moodle 5.1+ Single-Page Application (SPA) modal forms, dynamic fragment rendering, and full-page question editors.
+- **In-Context Tag Assistance**: Displays top established tags from the current **Question Bank Context** as clickable Bootstrap 5 pills/chips directly beneath the tag input field.
 - **Taxonomy Alignment**: Prevents tag fragmentation and synonym wildfires (e.g. `Geo` vs. `Geometrie`).
 - **1-Click Selection**: Clicking a tag chip instantly populates Moodle's native `form-autocomplete` widget.
 - **Option 3 Smart Expand (`+ X weitere`)**: Displays top 5 tags initially and shows a `+ X weitere` expansion button ONLY if more than 5 tags exist in the Question Bank.
 - **High Performance & Caching**: Database queries are cached per Question Bank context using the Moodle Universal Cache (MUC). Empirical benchmark: **0.0095 ms** per page load.
-- **PSR-14 Hooks API & 100% Core Compliant**: Built strictly with Moodle 4.4+ PSR-14 Hooks API (`db/hooks.php`) for 100% zero-config external installation compatibility with zero Moodle core modifications.
+- **PSR-14 Hooks API Only**: Pure Moodle 5.1+ PSR-14 Hooks architecture (`db/hooks.php`) with zero legacy function callbacks and zero Moodle core modifications.
 
 ---
 
 ## 🛠️ Architecture & Ecosystem Fit
 
-- **Ecosystem Complement to `qbank_bulktags`**:
-  - `qbank_bulktags` manages batch tag operations from the question list view.
-  - `qbank_tagassistant` provides inline tag assistance during single-question creation/editing.
+- **Requires Moodle 5.1+**: Version 2.0.0 is dedicated exclusively to Moodle 5.1+. Older Moodle versions (<= 5.0) are deprecated in favor of clean PSR-14 Hooks API architecture.
 - **Scoping Decision**: Scoped to the **Question Bank Context** (`$context->id`). Aggregates question tags across all categories in the current Question Bank context.
 
 ---
@@ -58,15 +56,6 @@
   ```bash
   vendor/bin/behat --config /path/to/behat.yml question/bank/tagassistant/tests/behat/tag_assistant.feature
   ```
-
----
-
-## ⚡ Performance
-
-Empirically measured inside Moodle 5.2 execution environment:
-- **Cached Execution (MUC)**: `0.0095 ms` (9.5 microseconds)
-- **Uncached Direct SQL**: `0.444 ms`
-- **Database EXPLAIN**: Fully indexed (`PRIMARY` & `mdl_quesvers_quever_uix` unique indexes) with 0 full table scans.
 
 ---
 

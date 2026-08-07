@@ -2,8 +2,8 @@ define(['core/str'], function(Str) {
     'use strict';
 
     /**
-     * Tag Assistant AMD module for Question Bank.
-     * Handles tag chips, autocomplete integration, and native badge rendering without hiding 'x' icons.
+     * Tag Assistant AMD module for Question Bank in Moodle 5.1+.
+     * Handles tag chips, autocomplete integration, and dynamic modal forms.
      *
      * @module     qbank_tagassistant/tag_chips
      * @copyright  2026 Antigravity
@@ -20,24 +20,46 @@ define(['core/str'], function(Str) {
                 return;
             }
 
-            var targetSelect = document.querySelector(config.targetSelector || 'select#id_tags, select[name="tags[]"]');
-            if (!targetSelect) {
-                return;
-            }
+            var tryInit = function() {
+                var targetSelect = document.querySelector(config.targetSelector || 'select#id_tags, select[name="tags[]"]');
+                if (!targetSelect) {
+                    return false;
+                }
+                this.setupChips(targetSelect, config);
+                return true;
+            }.bind(this);
 
+            if (!tryInit()) {
+                document.addEventListener('core_form/events:formRendered', tryInit);
+                document.addEventListener('shown.bs.modal', tryInit);
+                if (window.MutationObserver) {
+                    var docObserver = new MutationObserver(function() {
+                        if (tryInit()) {
+                            docObserver.disconnect();
+                        }
+                    });
+                    docObserver.observe(document.body, { childList: true, subtree: true });
+                }
+            }
+        },
+
+        /**
+         * Setup chips for a found select element.
+         *
+         * @param {HTMLSelectElement} targetSelect
+         * @param {Object} config
+         */
+        setupChips: function(targetSelect, config) {
             var formGroup = targetSelect.closest('.form-group, .fitem, div[id^="fitem_id_tags"]') || targetSelect.parentElement;
             if (!formGroup) {
                 return;
             }
 
-            // Target Moodle's right column (.felement) for 100% form grid alignment.
             var felement = targetSelect.closest('.felement') || formGroup.querySelector('.felement') || formGroup;
-
             if (felement.querySelector('.qbank-tag-chips-container')) {
                 return;
             }
 
-            // Container inside .felement for perfect alignment with input fields.
             var container = document.createElement('div');
             container.className = 'qbank-tag-chips-container mt-2 pt-2 border-top d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 w-100';
 
@@ -53,7 +75,6 @@ define(['core/str'], function(Str) {
             var initialTags = config.tags.slice(0, MAX_INITIAL);
             var remainingTags = config.tags.slice(MAX_INITIAL);
 
-            // Function to append tag button to list.
             var renderTagChip = function(tag) {
                 var li = document.createElement('li');
                 var btn = document.createElement('button');
@@ -74,12 +95,10 @@ define(['core/str'], function(Str) {
                 return li;
             }.bind(this);
 
-            // Render initial 5 tags.
             initialTags.forEach(function(tag) {
                 ul.appendChild(renderTagChip(tag));
             });
 
-            // Render "+ X weitere" button ONLY IF total tags > 5.
             if (remainingTags.length > 0) {
                 var moreLi = document.createElement('li');
                 var moreBtn = document.createElement('button');
@@ -102,7 +121,6 @@ define(['core/str'], function(Str) {
 
             container.appendChild(ul);
 
-            // Place container cleanly as the last child of .felement.
             var moveToBottom = function() {
                 if (felement.lastElementChild !== container) {
                     felement.appendChild(container);
@@ -131,7 +149,7 @@ define(['core/str'], function(Str) {
         },
 
         /**
-         * Add tag to select element and update autocomplete UI in accordance with Moodle standards.
+         * Add tag to select element and update autocomplete UI.
          *
          * @param {HTMLSelectElement} select
          * @param {String} tagName
@@ -140,7 +158,6 @@ define(['core/str'], function(Str) {
         addTag: function(select, tagName, btn) {
             var formGroup = select.closest('.form-group, .fitem, div[id^="fitem_id_tags"]') || select.parentElement;
 
-            // 1. Mark or create selected option in underlying select element.
             var option = null;
             for (var i = 0; i < select.options.length; i++) {
                 if (select.options[i].value === tagName || select.options[i].text === tagName) {
@@ -157,10 +174,8 @@ define(['core/str'], function(Str) {
                 option.selected = true;
             }
 
-            // 2. Render badge in form-autocomplete selection container cleanly without hiding inner 'x' spans.
             var selectionContainer = formGroup ? formGroup.querySelector('.form-autocomplete-selection, [data-region="form_autocomplete-selection"]') : null;
             if (selectionContainer) {
-                // Hide ONLY direct child placeholder spans (e.g. "Jeder Tag"), leaving inner 'x' spans untouched!
                 var directChildren = Array.from(selectionContainer.children);
                 directChildren.forEach(function(child) {
                     if (!child.hasAttribute('data-value') && child.getAttribute('role') !== 'option') {
@@ -191,7 +206,6 @@ define(['core/str'], function(Str) {
                         option.selected = false;
                         badge.remove();
 
-                        // Restore direct child placeholder if selection is empty.
                         var remainingBadges = selectionContainer.querySelectorAll('span[data-value]');
                         if (remainingBadges.length === 0) {
                             var directChildrenNow = Array.from(selectionContainer.children);
@@ -212,7 +226,6 @@ define(['core/str'], function(Str) {
                 }
             }
 
-            // 3. Notify Moodle form change checker.
             select.dispatchEvent(new Event('change', { bubbles: true }));
             if (window.jQuery) {
                 window.jQuery(select).trigger('change');

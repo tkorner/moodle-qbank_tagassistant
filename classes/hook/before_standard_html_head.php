@@ -19,7 +19,7 @@ namespace qbank_tagassistant\hook;
 use core\hook\output\before_standard_html_head as head_hook;
 
 /**
- * Hook listener for before_standard_html_head.
+ * Hook listener for before_standard_html_head targeting Moodle 5.1+.
  *
  * @package    qbank_tagassistant
  * @copyright  2026 Antigravity
@@ -44,7 +44,10 @@ class before_standard_html_head {
         $pagetype = $PAGE->pagetype ?? '';
         $isquestioneditor = ($pagetype === 'question-bank-editquestion-question' ||
                              $pagetype === 'question-question' ||
-                             strpos($pagetype, 'question-type-') === 0);
+                             $pagetype === 'question-bank-manage' ||
+                             $pagetype === 'mod_quiz-edit' ||
+                             strpos($pagetype, 'question-type-') === 0 ||
+                             strpos($pagetype, 'question-bank-') === 0);
 
         if (!$isquestioneditor) {
             return;

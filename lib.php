@@ -22,14 +22,4 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
- * Callback before HTML head output to inject tag assistant on question editing pages.
- */
-function qbank_tagassistant_before_standard_html_head(): void {
-    $haspluginhook = class_exists('\qbank_tagassistant\hook\before_standard_html_head');
-    $hascorehook = class_exists('\core\hook\output\before_standard_html_head');
-
-    if ($haspluginhook && $hascorehook) {
-        \qbank_tagassistant\hook\before_standard_html_head::callback(new \core\hook\output\before_standard_html_head());
-    }
-}
+defined('MOODLE_INTERNAL') || die();
