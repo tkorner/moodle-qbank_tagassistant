@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
     [
-        'hook' => \core\hook\output\before_standard_html_head::class,
-        'callback' => [\qbank_tagassistant\hook\before_standard_html_head::class, 'callback'],
+        'hook' => \core\hook\output\before_standard_head_html_generation::class,
+        'callback' => [\qbank_tagassistant\hook\before_standard_head_html_generation_listener::class, 'callback'],
     ],
 ];

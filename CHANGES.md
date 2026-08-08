@@ -8,6 +8,29 @@ Moodle-upgrade-relevant subset, see `upgrade.txt`.
 **Minimum Moodle version raised to 5.1.** This release is the result of a
 critical code-review audit against Moodle core development rules. Fixes:
 
+- **The PSR-14 hook was never actually wired up (critical):** `db/hooks.php`
+  registered a listener for `\core\hook\output\before_standard_html_head`,
+  a class that does not exist in Moodle core. The real hook is
+  `\core\hook\output\before_standard_head_html_generation`.
+  This stayed invisible in v1.x/v2.x because the chips were really rendered
+  by the *deprecated* `qbank_tagassistant_before_standard_html_head()`
+  callback in `lib.php` — core keeps calling a deprecated callback until the
+  component registers a listener for the hook that replaces it (see
+  `\core\hook\manager::is_deprecating_hook_present()`). So v2.x did work,
+  just never via the "PSR-14 Hooks API only" architecture it advertised.
+  Removing `lib.php` in this release therefore made the bogus hook name
+  fatal, which is how it was finally caught. The listener is now
+  `classes/hook/before_standard_head_html_generation_listener.php` (class
+  name matching the filename, as Moodle's autoloader requires) and
+  `db/hooks.php` registers the correct hook. Verified end-to-end in a real
+  browser against Moodle 5.2.1: chips render with correct labels and counts,
+  clicking one populates Moodle's native tag autocomplete and disables the
+  chip. Cross-checked on Moodle 5.1.5.
+- **Pagetype matching was broken in two ways:** the quiz-edit pagetype was
+  spelled `mod_quiz-edit` (underscore) instead of Moodle's actual
+  `mod-quiz-edit`, and the plain question-bank page (`/question/edit.php`,
+  whose pagetype Moodle derives automatically as `question-edit`) was not in
+  the whitelist at all.
 - **Cache staleness (functional bug):** tag counts could be up to 1 hour
   stale after a teacher tagged/untagged a question, because the
   `context_tags` cache had no invalidation event wired up and was never

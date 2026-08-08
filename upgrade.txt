@@ -2,6 +2,26 @@ This files describes API changes for the qbank_tagassistant plugin.
 
 === v3.0.0 (Build: 2026080800) ===
 
+* CRITICAL FIX: the PSR-14 hook registration named a hook class that does not
+  exist in Moodle core. `db/hooks.php` registered
+  `\core\hook\output\before_standard_html_head`; the real hook is
+  `\core\hook\output\before_standard_head_html_generation`. In v1.x/v2.x this
+  went unnoticed because the tag chips were in fact rendered by the
+  *deprecated* `qbank_tagassistant_before_standard_html_head()` callback in
+  `lib.php`, which core still invoked (core only suppresses a deprecated
+  callback once the component registers a listener for the replacing hook,
+  see `\core\hook\manager::is_deprecating_hook_present()`). So v2.x worked,
+  but never through the hooks-only architecture it claimed.
+  This release registers the correct hook, so the plugin now genuinely runs
+  on PSR-14 hooks. The listener moved to
+  `classes/hook/before_standard_head_html_generation_listener.php` with a
+  matching class name, per Moodle's filename-must-match-classname
+  autoloading rule. No action is required from site admins beyond the normal
+  upgrade + cache purge, and there is no double-render risk: core suppresses
+  the deprecated callback automatically now that the hook is registered.
+* Pagetype matching fixed: `mod_quiz-edit` corrected to `mod-quiz-edit`, and
+  `question-edit` (the pagetype Moodle derives for `/question/edit.php`)
+  added to the whitelist.
 * BREAKING: Minimum supported Moodle version is now 5.1 (branch requirement
   raised from 2024100700 to 2025100600). Moodle 4.5 and 5.0 are no longer
   supported.

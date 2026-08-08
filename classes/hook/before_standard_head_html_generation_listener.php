@@ -16,25 +16,25 @@
 
 namespace qbank_tagassistant\hook;
 
-use core\hook\output\before_standard_html_head as head_hook;
+use core\hook\output\before_standard_head_html_generation;
 
 /**
- * Hook listener for before_standard_html_head targeting Moodle 5.1+.
+ * Hook listener for before_standard_head_html_generation targeting Moodle 5.1+.
  *
  * @package    qbank_tagassistant
  * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class before_standard_html_head {
+class before_standard_head_html_generation_listener {
     /** @var bool Flag to prevent double execution. */
     public static bool $rendered = false;
 
     /**
-     * Callback for before_standard_html_head hook.
+     * Callback for the before_standard_head_html_generation hook.
      *
-     * @param object|null $hook The hook instance.
+     * @param before_standard_head_html_generation $hook The hook instance.
      */
-    public static function callback(?object $hook = null): void {
+    public static function callback(before_standard_head_html_generation $hook): void {
         global $PAGE;
 
         if (self::$rendered || !$PAGE) {
@@ -42,10 +42,11 @@ class before_standard_html_head {
         }
 
         $pagetype = $PAGE->pagetype ?? '';
-        $isquestioneditor = ($pagetype === 'question-bank-editquestion-question' ||
+        $isquestioneditor = ($pagetype === 'question-edit' ||
+                             $pagetype === 'question-bank-editquestion-question' ||
                              $pagetype === 'question-question' ||
                              $pagetype === 'question-bank-manage' ||
-                             $pagetype === 'mod_quiz-edit' ||
+                             $pagetype === 'mod-quiz-edit' ||
                              strpos($pagetype, 'question-type-') === 0 ||
                              strpos($pagetype, 'question-bank-') === 0);
 
