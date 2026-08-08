@@ -22,7 +22,7 @@ use core_privacy\local\metadata\null_provider;
  * Privacy provider for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements null_provider {

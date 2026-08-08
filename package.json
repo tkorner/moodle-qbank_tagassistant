@@ -1,0 +1,11 @@
+{
+    "name": "moodle-qbank_tagassistant",
+    "private": true,
+    "description": "AMD build tooling for the qbank_tagassistant Moodle plugin.",
+    "scripts": {
+        "build:amd": "node scripts/build-amd.js"
+    },
+    "devDependencies": {
+        "terser": "^5.31.0"
+    }
+}

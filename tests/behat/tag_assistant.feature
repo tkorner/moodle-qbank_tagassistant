@@ -26,4 +26,4 @@ Feature: Question Bank Tag Assistant
     When I press "Create a new question ..."
     And I set the field "Multiple choice" to "1"
     And I press "Add"
-    Then I should see "Top tags in this Question Bank:"
+    Then I should see "Frequent tags in this Question Bank:"

@@ -2,7 +2,7 @@
 
 [![Moodle Plugin CI](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/actions/workflows/moodle-ci.yml)
 [![Moodle Version](https://img.shields.io/badge/Moodle-5.1%2B-orange.svg)](https://moodle.org)
-[![Version](https://img.shields.io/badge/version-v2.0.0-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
+[![Version](https://img.shields.io/badge/version-v3.0.0-blue.svg)](https://github.com/tkorner/moodle-qbank_tagassistant/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Moodle Plugin Type](https://img.shields.io/badge/Plugin%20Type-qbank-green.svg)](https://docs.moodle.org/dev/Question_bank_plugins)
 
@@ -17,14 +17,14 @@
 - **Taxonomy Alignment**: Prevents tag fragmentation and synonym wildfires (e.g. `Geo` vs. `Geometrie`).
 - **1-Click Selection**: Clicking a tag chip instantly populates Moodle's native `form-autocomplete` widget.
 - **Option 3 Smart Expand (`+ X weitere`)**: Displays top 5 tags initially and shows a `+ X weitere` expansion button ONLY if more than 5 tags exist in the Question Bank.
-- **High Performance & Caching**: Database queries are cached per Question Bank context using the Moodle Universal Cache (MUC). Empirical benchmark: **0.0095 ms** per page load.
+- **High Performance & Caching**: Database queries are cached per Question Bank context using the Moodle Universal Cache (MUC), invalidated automatically when a question in that context is created, updated, or deleted (`db/events.php`), with a 5-minute TTL as a fallback safety net.
 - **PSR-14 Hooks API Only**: Pure Moodle 5.1+ PSR-14 Hooks architecture (`db/hooks.php`) with zero legacy function callbacks and zero Moodle core modifications.
 
 ---
 
 ## 🛠️ Architecture & Ecosystem Fit
 
-- **Requires Moodle 5.1+**: Version 2.0.0 is dedicated exclusively to Moodle 5.1+. Older Moodle versions (<= 5.0) are deprecated in favor of clean PSR-14 Hooks API architecture.
+- **Requires Moodle 5.1+**: As of v3.0.0 this plugin targets Moodle 5.1+ exclusively; older Moodle versions (<= 5.0) are not supported, so the codebase carries no legacy/dual-mode fallback code.
 - **Scoping Decision**: Scoped to the **Question Bank Context** (`$context->id`). Aggregates question tags across all categories in the current Question Bank context.
 
 ---
@@ -65,7 +65,15 @@ Implements the Moodle Privacy API (`\core_privacy\local\metadata\null_provider`)
 
 ---
 
+## 📋 Changelog & Upgrading
+
+See [`CHANGES.md`](CHANGES.md) for the human-readable changelog and
+[`upgrade.txt`](upgrade.txt) for the Moodle-upgrade-relevant summary. Existing
+installations only need to run the standard `php admin/cli/upgrade.php`.
+
+---
+
 ## 📜 License
 
 Licensed under the [GNU General Public License v3.0 or later](http://www.gnu.org/licenses/gpl.html).  
-Copyright (C) 2026 Antigravity & Contributors.
+Copyright (C) 2026 TKorner & Contributors.

@@ -15,7 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cache definitions for qbank_tagassistant.
+ * Event observers for qbank_tagassistant.
+ *
+ * NOTE: '::class' resolves to a string at parse time without requiring the class to be
+ * loadable, so if a future Moodle core release renames/removes one of these event classes,
+ * registration stays safe (the observer simply never fires for that event) rather than
+ * fataling. The cache's short TTL (db/caches.php) is the fallback safety net for that case.
  *
  * @package    qbank_tagassistant
  * @copyright  2026 TKorner
@@ -24,14 +29,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$definitions = [
-    // Primary invalidation is event-driven (see db/events.php + classes/observer.php).
-    // This TTL is only a fallback safety net for question/tag changes that don't route
-    // through the observed events, so it is kept short rather than the previous 1 hour.
-    'context_tags' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'simplekeys' => true,
-        'simpledata' => false,
-        'ttl' => 300,
+$observers = [
+    [
+        'eventname' => \core\event\question_created::class,
+        'callback' => [\qbank_tagassistant\observer::class, 'question_changed'],
+    ],
+    [
+        'eventname' => \core\event\question_updated::class,
+        'callback' => [\qbank_tagassistant\observer::class, 'question_changed'],
+    ],
+    [
+        'eventname' => \core\event\question_deleted::class,
+        'callback' => [\qbank_tagassistant\observer::class, 'question_changed'],
     ],
 ];

@@ -22,7 +22,7 @@ use core\hook\output\before_standard_html_head as head_hook;
  * Hook listener for before_standard_html_head targeting Moodle 5.1+.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class before_standard_html_head {

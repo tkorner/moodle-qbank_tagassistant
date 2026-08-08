@@ -1,0 +1,30 @@
+This files describes API changes for the qbank_tagassistant plugin.
+
+=== v3.0.0 (Build: 2026080800) ===
+
+* BREAKING: Minimum supported Moodle version is now 5.1 (branch requirement
+  raised from 2024100700 to 2025100600). Moodle 4.5 and 5.0 are no longer
+  supported.
+* The legacy `lib.php` callback fallback for `before_standard_html_head` has
+  been removed. The plugin now relies exclusively on the PSR-14 hook
+  registered in `db/hooks.php`, which is guaranteed to be available on the
+  new 5.1+ minimum.
+* The `context_tags` application cache is now invalidated automatically via
+  event observers (`db/events.php`, `classes/observer.php`) on
+  `\core\event\question_created`, `\core\event\question_updated`, and
+  `\core\event\question_deleted`, instead of relying solely on a 1-hour TTL.
+  The TTL is now 300 seconds and serves only as a fallback safety net.
+* The cache key structure changed from one entry per (context, limit) pair
+  to a single entry per context (sliced to the requested limit in PHP). Any
+  previously cached entries in the old key format are purged automatically
+  during upgrade; no admin action is required.
+* Fixed: `helper::purge_context_tags_cache()` could orphan cache entries for
+  any `$limit` value other than 10, 15, or 20. This is no longer possible
+  now that there is one cache entry per context.
+* `amd/build/tag_chips.min.js` is now a genuinely minified build artifact
+  (previously an unminified verbatim copy of the source). See
+  `package.json` / `npm run build:amd` to regenerate it.
+* The AMD module `qbank_tagassistant/tag_chips` no longer depends on jQuery
+  and no longer imports the unused `core/str`.
+* Fixed a memory-accumulation issue where every opened question-edit modal
+  left behind a permanent, never-disconnected `MutationObserver`.

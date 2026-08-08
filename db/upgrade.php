@@ -15,18 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library functions and callbacks for qbank_tagassistant.
+ * Upgrade steps for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Legacy callback fallback for before_standard_html_head.
+ * Upgrade function for qbank_tagassistant.
+ *
+ * @param int $oldversion The version we are upgrading from.
+ * @return bool
  */
-function qbank_tagassistant_before_standard_html_head(): void {
-    if (class_exists('\qbank_tagassistant\hook\before_standard_html_head')) {
-        \qbank_tagassistant\hook\before_standard_html_head::callback();
+function xmldb_qbank_tagassistant_upgrade(int $oldversion): bool {
+    if ($oldversion < 2026080800) {
+        // v3.0.0 changed the context_tags cache key structure from one entry per
+        // (context, limit) pair to one entry per context. Purge so no site is left
+        // serving cache entries in the old, now-unused key format.
+        \cache_helper::purge_by_definition('qbank_tagassistant', 'context_tags');
+
+        upgrade_plugin_savepoint(true, 2026080800, 'qbank', 'tagassistant');
     }
+
+    return true;
 }

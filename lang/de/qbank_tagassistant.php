@@ -18,7 +18,7 @@
  * German language strings for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

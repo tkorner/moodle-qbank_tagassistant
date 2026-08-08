@@ -22,7 +22,7 @@ use core_question\local\bank\plugin_features_base;
  * Class plugin_feature is the entry point for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class plugin_feature extends plugin_features_base {

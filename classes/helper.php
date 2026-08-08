@@ -22,30 +22,49 @@ use cache;
  * Helper class for qbank_tagassistant.
  *
  * @package    qbank_tagassistant
- * @copyright  2026 Antigravity
+ * @copyright  2026 TKorner
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
+    /** @var int Maximum number of tags ever cached per context, regardless of the caller's requested limit. */
+    private const CACHE_MAX_TAGS = 50;
+
     /**
      * Get the most frequently used question tags for a specific Question Bank context.
+     *
+     * Results for a context are cached as a single entry (up to {@see CACHE_MAX_TAGS} tags) and
+     * sliced to the requested $limit in PHP, so callers requesting different limits for the same
+     * context share one cache entry instead of fragmenting the cache per limit value.
      *
      * @param int $contextid The context ID of the Question Bank.
      * @param int $limit Maximum number of top tags to return (default 15).
      * @return array Array of tag objects with id, name, and questioncount properties.
      */
     public static function get_context_top_tags(int $contextid, int $limit = 15): array {
-        global $DB;
-
         if ($contextid <= 0) {
             return [];
         }
 
         $cache = cache::make('qbank_tagassistant', 'context_tags');
-        $cachekey = "ctx_{$contextid}_limit_{$limit}";
+        $cachekey = "ctx_{$contextid}";
         $cacheddata = $cache->get($cachekey);
-        if ($cacheddata !== false) {
-            return $cacheddata;
+        if ($cacheddata === false) {
+            $cacheddata = self::fetch_context_top_tags($contextid, self::CACHE_MAX_TAGS);
+            $cache->set($cachekey, $cacheddata);
         }
+
+        return array_slice($cacheddata, 0, $limit);
+    }
+
+    /**
+     * Run the uncached SQL query for the most frequently used question tags in a context.
+     *
+     * @param int $contextid The context ID of the Question Bank.
+     * @param int $limit Maximum number of rows to fetch from the database.
+     * @return array Array of tag objects with id, name, and questioncount properties.
+     */
+    private static function fetch_context_top_tags(int $contextid, int $limit): array {
+        global $DB;
 
         $sql = "SELECT t.id, t.rawname AS name, COUNT(DISTINCT qbe.id) AS questioncount
                   FROM {tag} t
@@ -81,7 +100,6 @@ class helper {
             ];
         }
 
-        $cache->set($cachekey, $result);
         return $result;
     }
 
@@ -93,9 +111,7 @@ class helper {
     public static function purge_context_tags_cache(?int $contextid = null): void {
         $cache = cache::make('qbank_tagassistant', 'context_tags');
         if ($contextid !== null) {
-            $cache->delete("ctx_{$contextid}_limit_15");
-            $cache->delete("ctx_{$contextid}_limit_10");
-            $cache->delete("ctx_{$contextid}_limit_20");
+            $cache->delete("ctx_{$contextid}");
         } else {
             $cache->purge();
         }

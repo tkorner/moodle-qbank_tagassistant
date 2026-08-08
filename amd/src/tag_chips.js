@@ -1,4 +1,4 @@
-define(['core/str', 'jquery'], function(Str, $) {
+define([], function() {
     'use strict';
 
     /**
@@ -6,9 +6,39 @@ define(['core/str', 'jquery'], function(Str, $) {
      * Handles tag chips, autocomplete integration, and dynamic modal forms.
      *
      * @module     qbank_tagassistant/tag_chips
-     * @copyright  2026 Antigravity
+     * @copyright  2026 TKorner
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
+
+    // Instances whose chip container position is kept pinned to the bottom of their .felement,
+    // and pruned automatically once their .felement is removed from the document (e.g. when a
+    // question-edit modal is destroyed). A single shared observer backs all instances instead of
+    // one MutationObserver per instance, so instances never outlive their DOM and leak.
+    var activeInstances = [];
+    var sharedObserver = null;
+
+    /**
+     * Lazily create the single document-wide observer that repositions/prunes chip instances.
+     */
+    var ensureSharedObserver = function() {
+        if (sharedObserver || !window.MutationObserver) {
+            return;
+        }
+
+        sharedObserver = new MutationObserver(function() {
+            activeInstances = activeInstances.filter(function(instance) {
+                if (!document.body.contains(instance.felement)) {
+                    return false;
+                }
+                if (instance.felement.lastElementChild !== instance.container) {
+                    instance.felement.appendChild(instance.container);
+                }
+                return true;
+            });
+        });
+        sharedObserver.observe(document.body, {childList: true, subtree: true});
+    };
+
     return {
         /**
          * Initialize the tag chips component.
@@ -38,7 +68,7 @@ define(['core/str', 'jquery'], function(Str, $) {
                             docObserver.disconnect();
                         }
                     });
-                    docObserver.observe(document.body, { childList: true, subtree: true });
+                    docObserver.observe(document.body, {childList: true, subtree: true});
                 }
             }
         },
@@ -72,8 +102,10 @@ define(['core/str', 'jquery'], function(Str, $) {
             ul.className = 'inline-list tag_list d-flex flex-wrap gap-1 p-0 m-0 list-unstyled align-items-center flex-grow-1';
 
             var MAX_INITIAL = 5;
-            var initialTags = config.tags.slice(0, MAX_INITIAL);
-            var remainingTags = config.tags.slice(MAX_INITIAL);
+            var PAGE_SIZE = 10;
+            var shownCount = 0;
+            var moreLi = null;
+            var moreBtn = null;
 
             var renderTagChip = function(tag) {
                 var li = document.createElement('li');
@@ -95,63 +127,57 @@ define(['core/str', 'jquery'], function(Str, $) {
                 return li;
             }.bind(this);
 
-            initialTags.forEach(function(tag) {
-                ul.appendChild(renderTagChip(tag));
-            });
-
-            if (remainingTags.length > 0) {
-                var moreLi = document.createElement('li');
-                var moreBtn = document.createElement('button');
-                moreBtn.type = 'button';
-                moreBtn.className = 'btn btn-outline-secondary rounded-pill me-1 mb-1 qbank-tag-more-btn';
-                moreBtn.textContent = '+ ' + remainingTags.length + ' weitere';
-
-                moreBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    moreLi.remove();
-                    remainingTags.forEach(function(tag) {
-                        ul.appendChild(renderTagChip(tag));
-                    });
-                    this.syncStates(targetSelect, container);
-                }.bind(this));
-
-                moreLi.appendChild(moreBtn);
-                ul.appendChild(moreLi);
-            }
-
-            container.appendChild(ul);
-
-            var moveToBottom = function() {
-                if (felement.lastElementChild !== container) {
-                    felement.appendChild(container);
-                }
+            // Reveals tags in batches: MAX_INITIAL up front, then up to PAGE_SIZE more per click
+            // on the "+ N weitere" button, which stays visible (and keeps counting down) until
+            // every tag has been revealed.
+            var renderNextBatch = function(count) {
+                config.tags.slice(shownCount, shownCount + count).forEach(function(tag) {
+                    ul.appendChild(renderTagChip(tag));
+                });
+                shownCount = Math.min(shownCount + count, config.tags.length);
+                updateMoreButton();
             };
 
-            moveToBottom();
-            setTimeout(moveToBottom, 50);
-            setTimeout(moveToBottom, 200);
-            setTimeout(moveToBottom, 500);
-
-            if (window.MutationObserver) {
-                var observer = new MutationObserver(function() {
-                    if (felement.lastElementChild !== container) {
-                        felement.appendChild(container);
+            var updateMoreButton = function() {
+                var remaining = config.tags.length - shownCount;
+                if (remaining <= 0) {
+                    if (moreLi) {
+                        moreLi.remove();
+                        moreLi = null;
                     }
-                });
-                observer.observe(felement, { childList: true });
-            }
+                    return;
+                }
+
+                if (!moreLi) {
+                    moreLi = document.createElement('li');
+                    moreBtn = document.createElement('button');
+                    moreBtn.type = 'button';
+                    moreBtn.className = 'btn btn-outline-secondary rounded-pill me-1 mb-1 qbank-tag-more-btn';
+                    moreBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        renderNextBatch(PAGE_SIZE);
+                        this.syncStates(targetSelect, container);
+                    }.bind(this));
+                    moreLi.appendChild(moreBtn);
+                }
+
+                moreBtn.textContent = '+ ' + Math.min(PAGE_SIZE, remaining) + ' weitere';
+                ul.appendChild(moreLi);
+            }.bind(this);
+
+            renderNextBatch(MAX_INITIAL);
+
+            container.appendChild(ul);
+            felement.appendChild(container);
+
+            activeInstances.push({felement: felement, container: container});
+            ensureSharedObserver();
 
             this.syncStates(targetSelect, container);
 
             targetSelect.addEventListener('change', function() {
                 this.syncStates(targetSelect, container);
             }.bind(this));
-
-            if ($) {
-                $(targetSelect).on('change', function() {
-                    this.syncStates(targetSelect, container);
-                }.bind(this));
-            }
         },
 
         /**
@@ -222,20 +248,14 @@ define(['core/str', 'jquery'], function(Str, $) {
                             });
                         }
 
-                        select.dispatchEvent(new Event('change', { bubbles: true }));
-                        if ($) {
-                            $(select).trigger('change');
-                        }
+                        select.dispatchEvent(new Event('change', {bubbles: true}));
                     });
 
                     selectionContainer.appendChild(badge);
                 }
             }
 
-            select.dispatchEvent(new Event('change', { bubbles: true }));
-            if ($) {
-                $(select).trigger('change');
-            }
+            select.dispatchEvent(new Event('change', {bubbles: true}));
 
             btn.disabled = true;
             btn.classList.add('disabled', 'opacity-50');
