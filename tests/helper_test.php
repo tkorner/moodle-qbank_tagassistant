@@ -130,22 +130,17 @@ final class helper_test extends advanced_testcase {
         $q1 = $qgenerator->create_question('shortanswer', null, ['category' => $category->id]);
         core_tag_tag::set_item_tags('core_question', 'question', $q1->id, $context, ['Biologie']);
 
-        // Simulate a newer draft version of the same question_bank_entry.
+        // Simulate a newer draft version of the same question_bank_entry. All three fields
+        // must be written in a single update: moving questionbankentryid first would briefly
+        // collide with the existing version 1 row on the (questionbankentryid, version)
+        // unique index.
         $readyversion = $DB->get_record('question_versions', ['questionid' => $q1->id]);
         $draftquestion = $qgenerator->create_question('shortanswer', null, ['category' => $category->id]);
-        $DB->set_field(
-            'question_versions',
-            'questionbankentryid',
-            $readyversion->questionbankentryid,
-            ['questionid' => $draftquestion->id]
-        );
-        $DB->set_field(
-            'question_versions',
-            'version',
-            $readyversion->version + 1,
-            ['questionid' => $draftquestion->id]
-        );
-        $DB->set_field('question_versions', 'status', 'draft', ['questionid' => $draftquestion->id]);
+        $draftversion = $DB->get_record('question_versions', ['questionid' => $draftquestion->id]);
+        $draftversion->questionbankentryid = $readyversion->questionbankentryid;
+        $draftversion->version = $readyversion->version + 1;
+        $draftversion->status = 'draft';
+        $DB->update_record('question_versions', $draftversion);
 
         helper::purge_context_tags_cache($context->id);
         $tags = helper::get_context_top_tags($context->id);
