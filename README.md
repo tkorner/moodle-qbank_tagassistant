@@ -10,6 +10,12 @@
 
 ---
 
+## 📸 Screenshot
+
+![Frequency tags displayed as clickable chips beneath the tag input](docs/frequency_tags.png)
+
+---
+
 ## 🌟 Key Features & User Benefits
 
 - **Moodle 5.1+ Modal & SPA Native**: Built specifically for Moodle 5.1+ Single-Page Application (SPA) modal forms, dynamic fragment rendering, and full-page question editors.
