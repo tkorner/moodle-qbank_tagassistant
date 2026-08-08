@@ -1,5 +1,15 @@
 This files describes API changes for the qbank_tagassistant plugin.
 
+=== v3.0.1 (Build: 2026080801) ===
+
+* Fixed hardcoded user-facing text in the AMD module: the expansion button
+  label was written literally as '+ N weitere' (German) and the chip
+  aria-label literally in English, regardless of site language. Both now use
+  `core/str` with the `moretags` and `addtagaria` strings that already
+  existed in the language packs but were never referenced. The
+  `qbank_tagassistant/tag_chips` module therefore depends on `core/str`
+  again. No API or database changes; a cache purge is enough.
+
 === v3.0.0 (Build: 2026080800) ===
 
 * CRITICAL FIX: the PSR-14 hook registration named a hook class that does not

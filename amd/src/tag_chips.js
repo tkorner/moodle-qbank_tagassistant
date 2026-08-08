@@ -1,4 +1,4 @@
-define([], function() {
+define(['core/str'], function(Str) {
     'use strict';
 
     /**
@@ -9,6 +9,22 @@ define([], function() {
      * @copyright  2026 TKorner
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
+
+    /**
+     * Resolve a plugin language string and apply it, keeping a language-neutral
+     * placeholder visible until it arrives. Strings are only rendered client-side
+     * here because their placeholders depend on state the server does not know
+     * (how many tags are still hidden, which tag a chip is for).
+     *
+     * @param {String} key Language string identifier.
+     * @param {Object|Number|String} param Substitution parameter for the string.
+     * @param {Function} apply Receives the resolved string.
+     */
+    var applyString = function(key, param, apply) {
+        Str.get_string(key, 'qbank_tagassistant', param).then(apply).catch(function() {
+            // Keep the neutral placeholder if the string cannot be fetched.
+        });
+    };
 
     // Instances whose chip container position is kept pinned to the bottom of their .felement,
     // and pruned automatically once their .felement is removed from the document (e.g. when a
@@ -95,7 +111,14 @@ define([], function() {
 
             var heading = document.createElement('div');
             heading.className = 'qbank-tag-chips-label fw-bold text-nowrap me-md-2';
-            heading.textContent = config.headingText || 'Häufige Schlagwörter in dieser Fragensammlung:';
+            if (config.headingText) {
+                // Normally supplied by the hook listener, already localised server-side.
+                heading.textContent = config.headingText;
+            } else {
+                applyString('topquestionbanktags', null, function(text) {
+                    heading.textContent = text;
+                });
+            }
             container.appendChild(heading);
 
             var ul = document.createElement('ul');
@@ -114,7 +137,10 @@ define([], function() {
                 btn.className = 'btn btn-outline-secondary rounded-pill me-1 mb-1 qbank-tag-chip';
                 btn.setAttribute('data-tag-name', tag.name);
                 btn.setAttribute('data-tag-id', tag.id);
-                btn.setAttribute('aria-label', 'Add tag ' + tag.name + ' (' + tag.count + ' questions)');
+                btn.setAttribute('aria-label', tag.name + ' (' + tag.count + ')');
+                applyString('addtagaria', {name: tag.name, count: tag.count}, function(text) {
+                    btn.setAttribute('aria-label', text);
+                });
 
                 btn.innerHTML = tag.name + ' <span class="badge bg-secondary text-white rounded-pill ms-1">' + tag.count + '</span>';
 
@@ -128,7 +154,7 @@ define([], function() {
             }.bind(this);
 
             // Reveals tags in batches: MAX_INITIAL up front, then up to PAGE_SIZE more per click
-            // on the "+ N weitere" button, which stays visible (and keeps counting down) until
+            // on the "show more" button, which stays visible (and keeps counting down) until
             // every tag has been revealed.
             var renderNextBatch = function(count) {
                 config.tags.slice(shownCount, shownCount + count).forEach(function(tag) {
@@ -161,7 +187,17 @@ define([], function() {
                     moreLi.appendChild(moreBtn);
                 }
 
-                moreBtn.textContent = '+ ' + Math.min(PAGE_SIZE, remaining) + ' weitere';
+                // The label is language-neutral until the string resolves. Because this runs
+                // again on every click, a slow lookup could otherwise land after a newer batch
+                // has already relabelled the button, so discard stale resolutions.
+                var batchsize = Math.min(PAGE_SIZE, remaining);
+                moreBtn.textContent = '+ ' + batchsize;
+                moreBtn.setAttribute('data-batch-size', batchsize);
+                applyString('moretags', batchsize, function(text) {
+                    if (moreBtn.getAttribute('data-batch-size') === String(batchsize)) {
+                        moreBtn.textContent = text;
+                    }
+                });
                 ul.appendChild(moreLi);
             }.bind(this);
 

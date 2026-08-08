@@ -3,6 +3,25 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.1 (Build: 2026080801)
+
+- **Hardcoded German text on non-German sites (user-visible bug):** the AMD
+  module wrote the expansion button label directly as `'+ N weitere'`, so an
+  English, French or any other language site showed German. The chips'
+  `aria-label` was likewise hardcoded English, and the heading had a German
+  fallback. All three now resolve through `core/str` against the existing
+  `moretags` / `addtagaria` / `topquestionbanktags` language strings, which
+  were already shipped in both language packs but never actually used.
+  Screen-reader users on non-English sites were affected as well.
+  Labels show a language-neutral placeholder (e.g. `+ 10`) for the moment
+  before the string resolves, and stale async resolutions are discarded so a
+  slow lookup cannot relabel a button that has meanwhile moved on.
+  (The v3.0.0 audit removed the module's `core/str` import as "unused". It
+  was unused — but the correct fix was to use it, not to drop it.)
+- README: the feature list still described the pre-v3.0.0 expansion
+  behaviour and used the internal working name "Option 3". Now describes the
+  batches-of-10 behaviour, and documents that the UI is fully localised.
+
 ## v3.0.0 (Build: 2026080800)
 
 **Minimum Moodle version raised to 5.1.** This release is the result of a
