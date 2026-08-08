@@ -26,9 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2026080800;
 // Requires Moodle 5.1+ only (4.5/5.0 support dropped in v3.0.0 to drop the legacy
-// non-hook code path entirely). Confirmed against real Moodle 5.1.5 core
-// (version.php $version = 2025100605.00) and Moodle 5.2.1 core via Docker testing.
-$plugin->requires  = 2025100600;
+// non-hook code path entirely). This is the exact 5.1 branch version, read from
+// real Moodle 5.1.5 core ($version = 2025100605.00); also verified on 5.2.1.
+$plugin->requires  = 2025100605;
 $plugin->component = 'qbank_tagassistant';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = 'v3.0.0';

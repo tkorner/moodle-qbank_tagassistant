@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Upgrade function for qbank_tagassistant.
  *
@@ -32,9 +30,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_qbank_tagassistant_upgrade(int $oldversion): bool {
     if ($oldversion < 2026080800) {
-        // v3.0.0 changed the context_tags cache key structure from one entry per
-        // (context, limit) pair to one entry per context. Purge so no site is left
-        // serving cache entries in the old, now-unused key format.
+        // Version 3.0.0 changed the context_tags cache key structure from one entry
+        // per (context, limit) pair to one entry per context. Purge so no site is
+        // left serving cache entries in the old, now-unused key format.
         \cache_helper::purge_by_definition('qbank_tagassistant', 'context_tags');
 
         upgrade_plugin_savepoint(true, 2026080800, 'qbank', 'tagassistant');

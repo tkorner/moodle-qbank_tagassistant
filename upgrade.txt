@@ -23,7 +23,7 @@ This files describes API changes for the qbank_tagassistant plugin.
   `question-edit` (the pagetype Moodle derives for `/question/edit.php`)
   added to the whitelist.
 * BREAKING: Minimum supported Moodle version is now 5.1 (branch requirement
-  raised from 2024100700 to 2025100600). Moodle 4.5 and 5.0 are no longer
+  raised from 2024100700 to 2025100605). Moodle 4.5 and 5.0 are no longer
   supported.
 * The legacy `lib.php` callback fallback for `before_standard_html_head` has
   been removed. The plugin now relies exclusively on the PSR-14 hook

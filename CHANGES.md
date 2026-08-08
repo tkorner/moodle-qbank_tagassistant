@@ -60,8 +60,13 @@ critical code-review audit against Moodle core development rules. Fixes:
   with a single shared, self-pruning observer.
 - **Simplified architecture:** removed the legacy `lib.php` callback
   fallback for `before_standard_html_head` now that Moodle 5.1+ is the
-  floor and PSR-14 hooks are always available. Resolves a `MOODLE_INTERNAL`
-  guard inconsistency that only existed because of that legacy file.
+  floor and PSR-14 hooks are always available. (Note: the varying presence
+  of the `MOODLE_INTERNAL` guard across files is *correct*, not an
+  inconsistency — Moodle's `MoodleInternalNotNeeded` sniff only wants the
+  guard in files with side effects, i.e. those assigning `$callbacks`,
+  `$definitions`, `$observers` or `$plugin`. Files that merely declare a
+  function, such as the old `lib.php` and the new `db/upgrade.php`, must
+  not have it.)
 - Added `db/upgrade.php` + `upgrade.txt` so upgrading sites get the cache
   purged automatically instead of silently keeping stale-format entries.
 - **Test-correctness fix found via real Moodle 5.1/5.2 Docker testing:** course-level
