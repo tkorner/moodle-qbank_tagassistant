@@ -3,6 +3,13 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.2 (Build: 2026080802)
+
+- Adds a CAMP registry listing manifest (`.camp/listing.yml`) and release
+  publish workflow (`.github/workflows/camp-release.yml`). No functional
+  changes; this release exists so the tag carries the workflow needed to
+  publish to the [CAMP registry](https://camp-registry.org).
+
 ## v3.0.1 (Build: 2026080801)
 
 - **Hardcoded German text on non-German sites (user-visible bug):** the AMD
