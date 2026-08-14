@@ -1,0 +1,41 @@
+# .camp/listing.yml — lives in this plugin's repository (RFC §4.1).
+# camp ingests and hash-pins this file at each tagged release.
+
+name: Question Bank Tag Assistant
+summary: Suggests frequently used tags as clickable chips when editing questions, to keep tagging consistent across a question bank.
+description: |
+  Question Bank Tag Assistant helps teachers and question authors keep a
+  consistent tag taxonomy when editing questions in the Moodle question
+  bank.
+
+  When editing or creating a question, the plugin shows the most frequently
+  used tags from the current question bank context as clickable chips
+  directly beneath the tag input field. Clicking a chip instantly adds it to
+  the tag field, so authors reuse existing tags instead of guessing whether
+  the established tag is "Geo" or "Geometrie".
+
+  - Shows the top tags already established in the current question bank
+    context, so authors reuse existing tags instead of creating
+    near-duplicates
+  - One-click tag selection into Moodle's native autocomplete tag field
+  - Expandable list: starts with the top 5 tags, with a "show more" button
+    to reveal further tags in batches
+  - Fully localised (English and German included), including screen-reader
+    labels
+  - Cached per context via Moodle's Universal Cache, automatically
+    invalidated when questions are added, edited, or deleted
+  - Built natively for Moodle 5.1+ modal and single-page question editors,
+    using the PSR-14 Hooks API with no core modifications
+
+  Typical use case: subject departments or course teams with large,
+  collaboratively maintained question banks, where tag consistency tends to
+  drift over time (synonyms, spelling variants, abandoned tags).
+labels:
+  - fully-free
+category: qbank
+screenshots:
+  - path: .camp/screenshots/frequency_tags.png
+    caption: Frequency tags displayed as clickable chips beneath the tag input
+links:
+  docs: https://github.com/tkorner/moodle-qbank_tagassistant#readme
+  issues: https://github.com/tkorner/moodle-qbank_tagassistant/issues
