@@ -3,6 +3,12 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.3 (Build: 2026080803)
+
+- Adds `.gitattributes` with `export-ignore` rules so dev-only paths
+  (`.github`, `.camp`, `tests`, `node_modules`) are excluded from the CAMP
+  distribution ZIP. No functional changes.
+
 ## v3.0.2 (Build: 2026080802)
 
 - Adds a CAMP registry listing manifest (`.camp/listing.yml`) and release
