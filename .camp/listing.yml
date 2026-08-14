@@ -36,6 +36,12 @@ category: qbank
 screenshots:
   - path: .camp/screenshots/frequency_tags.png
     caption: Frequency tags displayed as clickable chips beneath the tag input
+  - path: .camp/screenshots/screenshot_chips_initial.png
+    caption: Top 5 tags shown as chips, with a button to reveal more
+  - path: .camp/screenshots/screenshot_chips_expanded.png
+    caption: Full list of tags after clicking "show more"
+  - path: .camp/screenshots/screenshot_chip_selected.png
+    caption: One click adds the tag to the native autocomplete field
 links:
   docs: https://github.com/tkorner/moodle-qbank_tagassistant#readme
   issues: https://github.com/tkorner/moodle-qbank_tagassistant/issues
