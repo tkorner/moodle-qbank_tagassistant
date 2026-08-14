@@ -3,6 +3,11 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.4 (Build: 2026080804)
+
+- Adds close-up screenshots of the tag-chip states (initial, expanded,
+  selected) to the CAMP listing manifest. No functional changes.
+
 ## v3.0.3 (Build: 2026080803)
 
 - Adds `.gitattributes` with `export-ignore` rules so dev-only paths
