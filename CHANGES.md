@@ -3,6 +3,16 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.5 (Build: 2026080805)
+
+- Adds missing Moodle boilerplate headers to `amd/src/tag_chips.js` and
+  `scripts/build-amd.js`, and fixes the module-id regex in the build
+  script that the header change had broken.
+- Adds the missing `cachedef_context_tags` language string (English and
+  German) for the `context_tags` cache definition, so it appears with a
+  proper label in Admin > Caching, and so AMOS has the full string set
+  for this release.
+
 ## v3.0.4 (Build: 2026080804)
 
 - Adds close-up screenshots of the tag-chip states (initial, expanded,
