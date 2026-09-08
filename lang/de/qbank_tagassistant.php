@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addtagaria'] = 'Schlagwort {$a->name} hinzufügen ({$a->count} Fragen)';
+$string['cachedef_context_tags'] = 'Häufige Schlagwörter pro Fragensammlungskontext';
 $string['moretags'] = '+ {$a} weitere';
 $string['notagsincontext'] = 'Noch keine etablierten Schlagwörter in dieser Fragensammlung.';
 $string['pluginname'] = 'Fragensammlungs Tag-Assistent';

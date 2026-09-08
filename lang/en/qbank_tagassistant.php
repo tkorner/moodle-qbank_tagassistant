@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addtagaria'] = 'Add tag {$a->name}, used in {$a->count} questions';
+$string['cachedef_context_tags'] = 'Frequent tags per question bank context';
 $string['moretags'] = '+ {$a} more';
 $string['notagsincontext'] = 'No established tags in this Question Bank yet.';
 $string['pluginname'] = 'Question Bank Tag Assistant';
