@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-22.04
+    continue-on-error: ${{ matrix.experimental == true }}
 
     services:
       mariadb:
@@ -29,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Moodle 5.1 requires PHP >= 8.2, Moodle 5.2 requires PHP >= 8.3
+        # Moodle 5.1 requires PHP >= 8.2, Moodle 5.2/5.3 require PHP >= 8.3
         # (per each branch's own composer.json), so the pairs are listed
         # explicitly rather than as a full product.
         include:
@@ -45,6 +46,19 @@ jobs:
           - php: '8.3'
             moodle-branch: 'MOODLE_502_STABLE'
             db: 'pgsql'
+          # Moodle hasn't cut MOODLE_503_STABLE yet, so this tracks core's
+          # perpetual dev branch. Marked experimental (job failure doesn't
+          # fail the workflow) since that branch can break independently of
+          # this plugin; switch moodle-branch to MOODLE_503_STABLE once it
+          # exists and drop `experimental`.
+          - php: '8.3'
+            moodle-branch: 'main'
+            db: 'mariadb'
+            experimental: true
+          - php: '8.3'
+            moodle-branch: 'main'
+            db: 'pgsql'
+            experimental: true
 
     steps:
       - name: Check out repository code

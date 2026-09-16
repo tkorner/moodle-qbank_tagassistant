@@ -3,6 +3,19 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## Unreleased
+
+- Verified compatible with Moodle 5.3 dev (branch `503`, Build 20260911,
+  `MATURITY_ALPHA`) via a real end-to-end probe against the running core: a
+  tagged question was created in a qbank module context, the helper's SQL
+  query returned the correct tag/count, the PSR-14 hook listener autoloaded,
+  and the `question_created`-driven cache invalidation ran without error. No
+  code changes were required — `$plugin->requires` is a floor already
+  satisfied by 5.3. CI now also runs an experimental job against core's
+  `main` branch (Moodle hasn't cut `MOODLE_503_STABLE` yet); its failure
+  doesn't fail the workflow. Switch that job to `MOODLE_503_STABLE` and drop
+  `experimental` once that branch exists.
+
 ## v3.0.5 (Build: 2026080805)
 
 - Adds missing Moodle boilerplate headers to `amd/src/tag_chips.js` and
