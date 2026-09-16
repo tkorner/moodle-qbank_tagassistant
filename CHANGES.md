@@ -3,7 +3,7 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
-## Unreleased
+## v3.0.6 (Build: 2026091600)
 
 - Verified compatible with Moodle 5.3 dev (branch `503`, Build 20260911,
   `MATURITY_ALPHA`) via a real end-to-end probe against the running core: a
