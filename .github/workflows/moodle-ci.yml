@@ -8,12 +8,13 @@ jobs:
     continue-on-error: ${{ matrix.experimental == true }}
 
     services:
-      # One shared service per engine across the whole matrix, so both must
-      # satisfy the highest branch tested: 5.3 requires MariaDB >= 11.4.0 and
-      # PostgreSQL >= 17 (admin/environment.xml), while 5.1/5.2 need only
-      # 10.11.0 / 15 / 16 — newer satisfies those too.
+      # Per-branch DB versions instead of one floor for the whole matrix: 5.3
+      # requires MariaDB >= 11.4.0 and PostgreSQL >= 17 (admin/environment.xml),
+      # while 5.1/5.2 require only 10.11.0 / 15 / 16. Pinning everything to 5.3's
+      # floor would test the stable branches against versions their sites do not
+      # necessarily run, so only the entries that need it override the default.
       mariadb:
-        image: mariadb:11.4
+        image: mariadb:${{ matrix.mariadb || '10.11' }}
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
@@ -21,13 +22,14 @@ jobs:
           MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
         ports:
           - 3306:3306
-        # MariaDB 11 dropped the mysql* compatibility symlinks, so the old
-        # `mysqladmin ping` probe never succeeds and the container is killed as
-        # unhealthy before any step runs — which fails every job in the matrix,
+        # healthcheck.sh ships in both 10.11 and 11.4, so one probe covers every
+        # entry. `mysqladmin ping` does not: MariaDB 11 removed the mysql*
+        # compatibility symlinks, leaving the container permanently unhealthy and
+        # killed before any step runs — which fails every job in the matrix,
         # including the pgsql ones, since services start for all of them.
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval 10s --health-timeout 5s --health-retries 3
       postgres:
-        image: postgres:17
+        image: postgres:${{ matrix.postgres || '16' }}
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -55,17 +57,20 @@ jobs:
             moodle-branch: 'MOODLE_502_STABLE'
             db: 'pgsql'
           # Moodle hasn't cut MOODLE_503_STABLE yet, so this tracks core's
-          # perpetual dev branch. Marked experimental (job failure doesn't
-          # fail the workflow) since that branch can break independently of
-          # this plugin; switch moodle-branch to MOODLE_503_STABLE once it
-          # exists and drop `experimental`.
+          # perpetual dev branch, which currently carries 5.3beta. These are the
+          # only entries needing the raised DB floors. Marked experimental (job
+          # failure doesn't fail the workflow) since that branch can break
+          # independently of this plugin; switch moodle-branch to
+          # MOODLE_503_STABLE once it exists and drop `experimental`.
           - php: '8.3'
             moodle-branch: 'main'
             db: 'mariadb'
+            mariadb: '11.4'
             experimental: true
           - php: '8.3'
             moodle-branch: 'main'
             db: 'pgsql'
+            postgres: '17'
             experimental: true
 
     steps:
