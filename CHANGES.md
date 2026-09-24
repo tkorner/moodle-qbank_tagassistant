@@ -3,6 +3,20 @@
 All notable changes to `qbank_tagassistant` are documented here. For the exact
 Moodle-upgrade-relevant subset, see `upgrade.txt`.
 
+## v3.0.7 (Build: 2026092400)
+
+- **The v3.0.6 Moodle 5.3 CI jobs would never have passed.** They were added
+  against the workflow's shared `mariadb:10` and `postgres:16` service
+  containers, but Moodle 5.3 requires MariaDB >= 11.4.0 and PostgreSQL >= 17
+  (`admin/environment.xml`), so `install_database.php` would have aborted on
+  the required-environment check every time — and `continue-on-error` would
+  have hidden it as a green check. Services are now `mariadb:11.4` and
+  `postgres:17`, which still satisfy 5.1 (10.11.0 / 15) and 5.2 (10.11.0 /
+  16). No change to the plugin itself.
+- The README version badge was a hand-maintained literal and had been left at
+  `v3.0.1` for five releases. It now reads the latest release from GitHub
+  dynamically, so it cannot drift again.
+
 ## v3.0.6 (Build: 2026091600)
 
 - Verified compatible with Moodle 5.3 dev (branch `503`, Build 20260911,

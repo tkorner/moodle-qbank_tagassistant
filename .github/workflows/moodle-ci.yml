@@ -8,8 +8,12 @@ jobs:
     continue-on-error: ${{ matrix.experimental == true }}
 
     services:
+      # One shared service per engine across the whole matrix, so both must
+      # satisfy the highest branch tested: 5.3 requires MariaDB >= 11.4.0 and
+      # PostgreSQL >= 17 (admin/environment.xml), while 5.1/5.2 need only
+      # 10.11.0 / 15 / 16 — newer satisfies those too.
       mariadb:
-        image: mariadb:10
+        image: mariadb:11.4
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
@@ -19,7 +23,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
       postgres:
-        image: postgres:16
+        image: postgres:17
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
