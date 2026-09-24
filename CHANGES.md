@@ -13,6 +13,10 @@ Moodle-upgrade-relevant subset, see `upgrade.txt`.
   have hidden it as a green check. Services are now `mariadb:11.4` and
   `postgres:17`, which still satisfy 5.1 (10.11.0 / 15) and 5.2 (10.11.0 /
   16). No change to the plugin itself.
+  Bumping MariaDB also required replacing the `mysqladmin ping` health probe
+  with the image's own `healthcheck.sh`, since MariaDB 11 dropped the `mysql*`
+  compatibility symlinks; without that the service container is killed as
+  unhealthy before any step runs, taking every job in the matrix with it.
 - The README version badge was a hand-maintained literal and had been left at
   `v3.0.1` for five releases. It now reads the latest release from GitHub
   dynamically, so it cannot drift again.

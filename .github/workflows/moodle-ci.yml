@@ -21,7 +21,11 @@ jobs:
           MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
+        # MariaDB 11 dropped the mysql* compatibility symlinks, so the old
+        # `mysqladmin ping` probe never succeeds and the container is killed as
+        # unhealthy before any step runs — which fails every job in the matrix,
+        # including the pgsql ones, since services start for all of them.
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval 10s --health-timeout 5s --health-retries 3
       postgres:
         image: postgres:17
         env:
